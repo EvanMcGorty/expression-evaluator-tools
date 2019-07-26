@@ -37,6 +37,14 @@ a generic file will look like:
 
 
 
+include:path/of/include/folder (e.g. C:/expression-evaluator/include or ../../expression-evaluator/include)
+
+return:function_set or environment or interpreter
+
+function:name_of_function_that_will_return_this
+
+file:name_of_file_to_generate
+
 code:
 	//arbitrary c++ code, possibly just including a few header files or defining macros that are necessary for some reason
 	include"folder/myheader.h"
@@ -47,42 +55,66 @@ code:
 	{ int mem; };
 	void baz(){ foo = 7; }
 
-returntype functionname resultingfilename:
-	values:
-		//constants or values to be cached once and copied from that one value (copier)
-		:foo
-		pi:3.141592
-		get-nan:get_nan()
-	refs:
-		//references to point to
-		:foo
-		cout:std::cout
-		:myvec
-	constrefs:
-		//references to point to without write access
-		:foo
-		int_t:typeid(int)
-		myvec-const:myconstvec
-	rfn:
-		//already generated callables
-		garb:some_environment.garbage_getter()
-		funcs:some_environment.functions_printer(names, output)
-		funcs:functionname_ret.some_special_function(args) //only works when returntype is an environment
-	sfn:
-		//function_pointers, lambdas, invokable/callable objects
-		:&baz
-		zero:[](){return 0;}
-		:&system
-	mfn:
-		dothing:&my_manual_function
-		core.swap:&core::swap
-		core.drop:&cpp_core::drop
-	class classname:
-		(optional name):declare
-		(optional name):util
-		sfn:
+values:
+	//constants or values to be cached once and copied from that one value (copier)
+	:foo
+	pi:3.141592
+	get-nan:get_nan()
 
-	
+refs:
+	//references to point to
+	:foo
+	cout:std::cout
+	:myvec
+
+constrefs:
+	//references to point to without write access
+	:foo
+	int_t:typeid(int)
+	myvec-const:myconstvec
+
+rfn:
+	//already generated callables
+	garb:some_environment.garbage_getter()
+	funcs:some_environment.functions_printer(names, output)
+	funcs:functionname_ret.some_special_function(args) //only works when returntype is an environment
+
+sfn:
+	//function_pointers, lambdas, invokable/callable objects
+	:&baz
+	zero:[](){return 0;}
+	:&system
+
+mfn:
+	//manual functions
+	dothing:&my_manual_function
+	core.swap:&core::swap
+	core.drop:&cpp_core::drop
+
+mbr:
+	//class member variables
+	pair.first:&std::pair<int,double>::first
+	getmem:&bar::mem
+	front:&mylist::front
+
+use:
+	//for importing function sets
+	core
+	types
+	util<int>
+
+class classname:
+	(optional name):declare
+	(optional name):util
+sfn classname:
+	//looks for names in the namespace classname
+	member_function_of_classname
+	static_function_of_classname
+mbr classname:
+	//looks for names in the namespace classname
+	member_of_classname
+//this namespace trick also works with other kinds of function generators such as mfn
+
 
 
 
