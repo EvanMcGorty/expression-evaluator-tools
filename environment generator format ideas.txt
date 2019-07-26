@@ -1,0 +1,88 @@
+
+things to have in the environment generator:
+	function_set vs interpreter vs environment
+	declare, declare_with_name
+	auto_call, input_reprint, error_print
+	use function sets with or without namespaces, templatable function sets such as util
+	cfn, sfn, mfn, mbr, refto, constrefto, copier, pick
+	specialize extended_util, type_operation_info, name of a type, parsing/printing, wrapper_type_operation_info
+
+needs to be able to express:
+	create namespaces for groups of added functions
+	automatically parse c++ identifiers into expression evaluator safe names
+	choose between not declaring a class, declaring it with a generated name, or declaring it with a chosen name
+	declaring into a specific type_info_set
+	should member functions be preceded with the name of their class somehow?
+		should it be with the name found in the used type_info_set?
+		should it be auto-generated? (what if it isn't declared and typeid().name gives an invalid name?)
+	provide parsing and printing methods for a class
+	provide interclass casts (from cfn) with automatic or chosen names.
+		maybe each class declaration (where members are listed) should state the ability to cast to some types
+	a generic way to deal with class and function template arguments
+	a generic way to refer to specific instanciations of functions
+	a way to import function sets
+	a way to import packages (e.g. std::vector function sets, name declaration etc)
+	a way create the packageness of a new class, e.g. describe it
+
+
+
+there are 3 kinds of objects that can be generated:
+function sets only have functions of various types
+environments have the same and some more special localized functions
+and interpreters have all of that and some extra options, input and output stream pointers, and a pointer to a runtime typeinfo database
+
+
+a generic file will look like:
+
+
+
+
+code:
+	//arbitrary c++ code, possibly just including a few header files or defining macros that are necessary for some reason
+	include"folder/myheader.h"
+	include<string>
+	include"C:/boost/include/boost/python.hpp"
+	int foo = 3;
+	class bar
+	{ int mem; };
+	void baz(){ foo = 7; }
+
+returntype functionname resultingfilename:
+	values:
+		//constants or values to be cached once and copied from that one value (copier)
+		:foo
+		pi:3.141592
+		get-nan:get_nan()
+	refs:
+		//references to point to
+		:foo
+		cout:std::cout
+		:myvec
+	constrefs:
+		//references to point to without write access
+		:foo
+		int_t:typeid(int)
+		myvec-const:myconstvec
+	rfn:
+		//already generated callables
+		garb:some_environment.garbage_getter()
+		funcs:some_environment.functions_printer(names, output)
+		funcs:functionname_ret.some_special_function(args) //only works when returntype is an environment
+	sfn:
+		//function_pointers, lambdas, invokable/callable objects
+		:&baz
+		zero:[](){return 0;}
+		:&system
+	mfn:
+		dothing:&my_manual_function
+		core.swap:&core::swap
+		core.drop:&cpp_core::drop
+	class classname:
+		(optional name):declare
+		(optional name):util
+		sfn:
+
+	
+
+
+
