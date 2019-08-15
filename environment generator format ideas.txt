@@ -43,7 +43,12 @@ return:function_set or environment or interpreter
 
 function:name_of_function_that_will_return_this
 
+//can be .h, .cpp, whatever. it will simply have a function returning some generated evaluator related object
 file:name_of_file_to_generate
+
+//if you generated a cpp file you may want to automatically compile it to an object file or executable and then maybe even delete the cpp file
+compile:g++ name_of_file_to_generate -c -std=c++17 -o name_of_file_to_generate.o; rm name_of_file_to_generate
+
 
 code:
 	//arbitrary c++ code, possibly just including a few header files or defining macros that are necessary for some reason
@@ -103,7 +108,7 @@ use:
 	types
 	util<int>
 
-class classname:
+type classname:
 	(optional name):declare
 	(optional name):util
 sfn classname:
